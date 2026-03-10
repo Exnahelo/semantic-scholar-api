@@ -60,4 +60,4 @@ Visit `http://localhost:8000/docs` for interactive API documentation.
 
 ## License
 
-[Add your license here]
+MIT
