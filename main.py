@@ -10,11 +10,18 @@ from cachetools import TTLCache
 GRAPH_BASE = "https://api.semanticscholar.org/graph/v1"
 RECS_BASE = "https://api.semanticscholar.org/recommendations/v1"
 API_KEY = os.getenv("SEMANTIC_SCHOLAR_API_KEY")
+PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "https://semantic-scholar-api.onrender.com")
 
 app = FastAPI(
     title="Semantic Scholar Research API",
     version="1.1.0",
     description="Wrapper API for Semantic Scholar paper search, details, recommendations, reading-list generation, and foundational paper discovery.",
+    servers=[
+        {
+            "url": PUBLIC_BASE_URL,
+            "description": "Production server"
+        }
+    ],
 )
 
 # Caches
@@ -51,7 +58,11 @@ def make_summary(
 ) -> str:
     year_part = str(year) if year else "n.d."
     venue_part = venue if venue else "Unknown venue"
-    citation_part = f"cited {citation_count} times" if citation_count is not None else "citation count unavailable"
+    citation_part = (
+        f"cited {citation_count} times"
+        if citation_count is not None
+        else "citation count unavailable"
+    )
     return f"{title} ({year_part}, {venue_part}) — {citation_part}."
 
 
